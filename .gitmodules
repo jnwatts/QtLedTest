@@ -1,0 +1,3 @@
+[submodule "QLedMatrix"]
+	path = QLedMatrix
+	url = https://github.com/jnwatts/QLedMatrix.git

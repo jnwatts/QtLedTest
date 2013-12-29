@@ -31,7 +31,7 @@ FORMS    += \
     ssd1306.ui \
     mainwindow.ui
 
-unix:!macx:!symbian: LIBS += -L$$PWD/../QLedMatrix/build/ -lqledmatrix
+unix:!macx:!symbian: LIBS += -L$$PWD/QLedMatrix/build/ -lqledmatrix
 
-INCLUDEPATH += $$PWD/../QLedMatrix/
-DEPENDPATH += $$PWD/../QLedMatrix/
+INCLUDEPATH += $$PWD/QLedMatrix/
+DEPENDPATH += $$PWD/QLedMatrix/
