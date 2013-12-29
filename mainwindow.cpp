@@ -15,9 +15,9 @@ MainWindow::MainWindow(QWidget *parent) :
     gpu_mem = NULL;
     ui->setupUi(this);
     resize();
+    this->ui->oled->setPixelOnColor(QColor(Qt::cyan).rgb());
     
     display_offset = 0;
-
 
     FontDescription *fd = &fonts[0];
     while (fd->name) {
