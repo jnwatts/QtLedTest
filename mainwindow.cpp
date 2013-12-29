@@ -109,12 +109,9 @@ void MainWindow::on_pbUpdate_clicked()
 
 void MainWindow::resize()
 {
-    QStringList list = this->ui->dispRes->text().split('x');
-    displayRes = QSize(list.at(0).toInt(), list.at(1).toInt());
-    list = this->ui->dispDim->text().split('x');
-    displayDim = QSize(list.at(0).toFloat(), list.at(1).toFloat());
-    list = this->ui->monitorDPI->text().split('x');
-    monitorDPI = QSize(list.at(0).toFloat(), list.at(1).toFloat());
+    displayRes = parseSize(this->ui->dispRes->text());
+    displayDim = parseSizeF(this->ui->dispDim->text());
+    monitorDPI = parseSizeF(this->ui->monitorDPI->text());
     this->zoomFactor = (float)this->ui->dispZoom->value() / 100.0;
     QSize oledSize((int)(displayDim.width() * monitorDPI.width() * zoomFactor), (int)(displayDim.height() * monitorDPI.height() * zoomFactor));
     this->ui->oled->setDisplayResolution(displayRes.width(), displayRes.height());

@@ -34,8 +34,8 @@ private:
 
     Ui::MainWindow *ui;
     QSize displayRes;
-    QSize displayDim;
-    QSize monitorDPI;
+    QSizeF displayDim;
+    QSizeF monitorDPI;
     float zoomFactor;
     FontInfo *font;
     GraphicsObj graphics_obj;
