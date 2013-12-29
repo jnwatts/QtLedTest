@@ -1,3 +1,6 @@
 [submodule "QLedMatrix"]
 	path = QLedMatrix
 	url = https://github.com/jnwatts/QLedMatrix.git
+[submodule "FontImageToHeaders"]
+	path = FontImageToHeaders
+	url = https://github.com/jnwatts/FontImageToHeaders.git
