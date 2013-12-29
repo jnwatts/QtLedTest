@@ -29,6 +29,9 @@ private:
     void render(void);
     void update(void);
     
+    static QSizeF parseSizeF(QString str);
+    static QSize parseSize(QString str);
+
     Ui::MainWindow *ui;
     QSize displayRes;
     QSize displayDim;

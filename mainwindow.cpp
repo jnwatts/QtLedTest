@@ -75,6 +75,30 @@ void MainWindow::update()
     }
 }
 
+QSizeF MainWindow::parseSizeF(QString str)
+{
+    str = str.toLower();
+    if (str.contains('x')) {
+        QStringList list = str.split('x');
+        QSizeF result(list.at(0).toFloat(), list.at(1).toFloat());
+        return result;
+    } else {
+        return QSizeF();
+    }
+}
+
+QSize MainWindow::parseSize(QString str)
+{
+    str = str.toLower();
+    if (str.contains('x')) {
+        QStringList list = str.split('x');
+        QSize result(list.at(0).toInt(), list.at(1).toInt());
+        return result;
+    } else {
+        return QSize();
+    }
+}
+
 void MainWindow::on_pbUpdate_clicked()
 {
     if (!gpu_mem)
