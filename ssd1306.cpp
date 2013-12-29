@@ -7,7 +7,7 @@ SSD1306::SSD1306(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    this->ui->ledMatrix->setBackgroundMode(Qt::TransparentMode);
+//    this->ui->ledMatrix->setBackgroundMode(Qt::TransparentMode);
 
     setPixelOnColor(QLedMatrix::White);
     setPixelOffColor(this->ui->ledMatrix->darkLedColor().rgb());
