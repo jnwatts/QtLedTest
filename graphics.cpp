@@ -11,7 +11,7 @@ void update_display(void);
 
 static int _getPixel_1bpp(GraphicsHandle handle, void *buf, int x, int y, int stride)
 {
-    GraphicsObj *obj = toObject(handle);
+    (void)handle;
     uint8_t *mem = (uint8_t*)buf;
     mem += (y / 8) * stride;
     mem += x;
@@ -21,7 +21,7 @@ static int _getPixel_1bpp(GraphicsHandle handle, void *buf, int x, int y, int st
 
 static void _setPixel_1bpp(GraphicsHandle handle, void *buf, int x, int y, int stride, int color)
 {
-    GraphicsObj *obj = toObject(handle);
+    (void)handle;
     uint8_t *mem = (uint8_t*)buf;
     int page = (y / 8);
     int col = x;
@@ -182,27 +182,16 @@ void Graphics_measureString(GraphicsHandle handle, FontInfo *font, const char *s
     (void)handle;
     const char *s = str;
     char c = 0;
-//    int orig_x = x;
-//    int orig_y = y;
-//    y -= font->height - font->size;
     *w = 0;
     *h = font->height;
     while ((c = *s++) != '\0') {
         if (c == '\n') {
-//            x = orig_x;
-//            y += font->size;
             *h += font->height;
-        } else if (c == '\r') {
-//            x = orig_x;
         } else {
             CharInfo *ci = Font_getCharInfo(font, c);
             if (ci) {
-//                Graphics_drawChar(handle, font, ci, c, x, y);
-//                x += ci->width;
                 *w += ci->width;
             } else {
-//                Graphics_drawRect(handle, x + 1, y + 1, font->size, font->size);
-//                x += font->size + 2;
                 *w += font->size + 2;
             }
         }
@@ -223,8 +212,6 @@ void Graphics_drawChar(GraphicsHandle handle, FontInfo *font, CharInfo *ci, char
         int src_h = ci->rect[3];
         int dst_x = x + ci->offset[0];
         int dst_y = y + ci->offset[1];
-        // Advance is ci->width
-        qDebug("drawChar: '%c' at %d,%d. WxH: %dx%d", c, x, y, src_w, src_h);
         for (int dy = 0; dy < src_h; ++dy) {
             for (int dx = 0; dx < src_w; ++dx) {
                 if (obj->getPixel(handle, font->data, src_x + dx, src_y + dy, font->stride) != obj->fillColor)
@@ -239,14 +226,10 @@ void Graphics_drawString(GraphicsHandle handle, FontInfo *font, const char *str,
     const char *s = str;
     char c = 0;
     int orig_x = x;
-    int orig_y = y;
-//    y -= font->height - font->size;
-//    int h = font->height;
     while ((c = *s++) != '\0') {
         if (c == '\n') {
             x = orig_x;
             y += font->size;
-//            *h += font->height;
         } else if (c == '\r') {
             x = orig_x;
         } else {
@@ -254,11 +237,9 @@ void Graphics_drawString(GraphicsHandle handle, FontInfo *font, const char *str,
             if (ci) {
                 Graphics_drawChar(handle, font, ci, c, x, y);
                 x += ci->width;
-//                w += ci->width;
             } else {
                 Graphics_drawRect(handle, x + 1, y + 1, font->size, font->size);
                 x += font->size + 2;
-//                w += font->size + 2;
             }
         }
     }
