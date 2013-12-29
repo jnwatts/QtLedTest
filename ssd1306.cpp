@@ -1,9 +1,6 @@
 #include "ssd1306.h"
 #include "ui_ssd1306.h"
 
-const int SSD1306::NUM_COL = 128;
-const int SSD1306::NUM_PAGE = 8;
-
 SSD1306::SSD1306(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SSD1306)
@@ -11,8 +8,7 @@ SSD1306::SSD1306(QWidget *parent) :
     ui->setupUi(this);
     setPixelOnColor(QLedMatrix::White);
     setPixelOffColor(this->ui->ledMatrix->darkLedColor().rgb());
-    this->setDisplayResolution(NUM_COL, 8 * NUM_PAGE);
-    ram.resize(NUM_COL * NUM_PAGE);
+    this->setDisplayResolution(128, 32);
     _reset();
 }
 
@@ -33,8 +29,13 @@ void SSD1306::setPixelOffColor(QRgb color)
 
 void SSD1306::setDisplayResolution(int columns, int rows)
 {
+    if (columns < 128)
+        columns = 128;
+    if (rows < 32)
+        rows = 32;
     this->ui->ledMatrix->setColumnCount(columns);
     this->ui->ledMatrix->setRowCount(rows);
+    ram.resize(numColumns() * numPages());
 }
 
 void SSD1306::setCSn(bool CSn)
@@ -60,6 +61,16 @@ void SSD1306::setPixel(int x, int y, int value)
     this->ui->ledMatrix->setColorAt(y, x, (value == 0 ? offColor : onColor));
 }
 
+int SSD1306::numColumns()
+{
+    return this->ui->ledMatrix->columnCount();
+}
+
+int SSD1306::numPages()
+{
+    return this->ui->ledMatrix->rowCount() / 8;
+}
+
 void SSD1306::_reset()
 {
     _command_state = CS_IDLE;
@@ -75,18 +86,18 @@ void SSD1306::_reset()
     reg[REG_PAGE_ADDR_STOP] = 7;
     reg[REG_PAGE_START_ADDR] = 0;
     
-    for (int page = 0; page < NUM_PAGE; ++page) {
-        for (int col = 0; col < NUM_COL; ++col) {
-            ram[page * NUM_COL + col] = 0x00;
+    for (int page = 0; page < numPages(); ++page) {
+        for (int col = 0; col < numColumns(); ++col) {
+            ram[page * numColumns() + col] = 0x00;
         }
     }
 }
 
 void SSD1306::_update()
 {
-    for (int page = 0; page < NUM_PAGE; ++page) {
-        for (int col = 0; col < NUM_COL; ++col) {
-            uint8_t data = ram[page * NUM_COL + col];
+    for (int page = 0; page < numPages(); ++page) {
+        for (int col = 0; col < numColumns(); ++col) {
+            uint8_t data = ram[page * numColumns() + col];
             for (int y = 0; y < 8; ++y) {
                 int row = page * 8 + y;
                 bool value = false;
@@ -214,7 +225,7 @@ void SSD1306::_resetCommandState()
 
 int SSD1306::_getOffset(bool increment)
 {
-    int offset = reg[REG_PTR_PAGE] * NUM_COL + reg[REG_PTR_COL];
+    int offset = reg[REG_PTR_PAGE] * numColumns() + reg[REG_PTR_COL];
     
     if (increment) {
         // Increment pointer and check bounds
@@ -247,5 +258,8 @@ int SSD1306::_getOffset(bool increment)
             break;
         }
     }
-    return offset;
+    if (offset < numColumns() * numPages())
+        return offset;
+    else
+        return 0;
 }

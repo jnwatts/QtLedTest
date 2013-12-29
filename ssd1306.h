@@ -21,9 +21,6 @@ public:
     explicit SSD1306(QWidget *parent = 0);
     ~SSD1306();
     
-    static const int NUM_COL;
-    static const int NUM_PAGE;
-    
     typedef enum {
         CMD_SET_ENTIRE_DISPLAY_ON = 0xA4, // Arg is X[0], mask with 0xFE
         CMD_SET_NORMAL_INVERSE = 0xA6, // Arg is X[0], mask with 0xFE
@@ -52,6 +49,10 @@ public:
     
     void setPixel(int x, int y, int value);
     
+    int numColumns();
+    int numPages();
+
+
 private:
     void _reset(void);
     void _update(void);
