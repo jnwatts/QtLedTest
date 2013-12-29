@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>368</width>
-    <height>259</height>
+    <height>313</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -54,56 +54,56 @@
       </property>
      </widget>
     </item>
-    <item row="4" column="0">
+    <item row="6" column="0">
      <widget class="QLabel" name="label_5">
       <property name="text">
        <string>Display dim.</string>
       </property>
      </widget>
     </item>
-    <item row="5" column="0">
+    <item row="7" column="0">
      <widget class="QLabel" name="label_6">
       <property name="text">
        <string>Display res.</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
+    <item row="4" column="0">
      <widget class="QLabel" name="label_4">
       <property name="text">
        <string>Monitor DPI</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="1">
+    <item row="4" column="1">
      <widget class="QLineEdit" name="monitorDPI">
       <property name="text">
-       <string>5.58x5.567</string>
+       <string>5.5814x5.56701</string>
       </property>
      </widget>
     </item>
-    <item row="4" column="1">
+    <item row="6" column="1">
      <widget class="QLineEdit" name="dispRes">
       <property name="text">
        <string>128x32</string>
       </property>
      </widget>
     </item>
-    <item row="5" column="1">
+    <item row="7" column="1">
      <widget class="QLineEdit" name="dispDim">
       <property name="text">
-       <string>30x11.5</string>
+       <string>22.384x5.84</string>
       </property>
      </widget>
     </item>
-    <item row="6" column="0">
+    <item row="8" column="0">
      <widget class="QLabel" name="label_3">
       <property name="text">
        <string>Preview</string>
       </property>
      </widget>
     </item>
-    <item row="6" column="1">
+    <item row="8" column="1">
      <widget class="SSD1306" name="oled" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
@@ -119,10 +119,38 @@
       </property>
      </widget>
     </item>
-    <item row="7" column="1">
+    <item row="9" column="1">
      <widget class="QPushButton" name="pbUpdate">
       <property name="text">
        <string>Update preview</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_7">
+      <property name="text">
+       <string>Monitor res.</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_8">
+      <property name="text">
+       <string>Monitor dim.</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="monDim">
+      <property name="text">
+       <string>344x194</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="monRes">
+      <property name="text">
+       <string>1920x1080</string>
       </property>
      </widget>
     </item>

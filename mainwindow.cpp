@@ -124,3 +124,23 @@ void MainWindow::resize()
     gh = Graphics_init(&graphics_obj, gpu_mem, gpu_mem_size, displayRes.width(), displayRes.height(), 1);
     Graphics_setRenderOffset(gh, 0);
 }
+
+void MainWindow::on_monDim_textChanged(const QString &arg1)
+{
+    QSizeF dim = parseSizeF(arg1);
+    QSizeF res = parseSizeF(this->ui->monRes->text());
+    if (dim.isEmpty() || res.isEmpty())
+        return;
+    QSizeF dpi(res.width() / dim.width(), res.height() / dim.height());
+    this->ui->monitorDPI->setText(QString::number(dpi.width()) + "x" + QString::number(dpi.height()));
+}
+
+void MainWindow::on_monRes_textChanged(const QString &arg1)
+{
+    QSizeF dim = parseSizeF(this->ui->monDim->text());
+    QSizeF res = parseSizeF(arg1);
+    if (dim.isEmpty() || res.isEmpty())
+        return;
+    QSizeF dpi(res.width() / dim.width(), res.height() / dim.height());
+    this->ui->monitorDPI->setText(QString::number(dpi.width()) + "x" + QString::number(dpi.height()));
+}
