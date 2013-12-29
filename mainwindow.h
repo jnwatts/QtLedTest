@@ -19,17 +19,26 @@ public:
     ~MainWindow();
     
 public slots:
-    void on_comboBox_currentIndexChanged(int index);
+    void on_tabFont_currentIndexChanged(int index);
     
+private slots:
+    void on_pbUpdate_clicked();
+    void resize(void);
+
 private:
     void render(void);
     void update(void);
     
     Ui::MainWindow *ui;
+    QSize displayRes;
+    QSize displayDim;
+    QSize monitorDPI;
+    float zoomFactor;
     FontInfo *font;
     GraphicsObj graphics_obj;
     GraphicsHandle gh;
-    uint8_t gpu_mem[128*(32*2)/8];
+    uint8_t *gpu_mem;
+    int gpu_mem_size;
     int display_offset;
     static const int COLOR_OFF;
     static const int COLOR_ON;
