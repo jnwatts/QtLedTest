@@ -46,7 +46,6 @@ void SSD1306::setCSn(bool CSn)
     _CSn = CSn;
 }
 
-
 void SSD1306::putByte(bool D_Cn, uint8_t D0_7)
 {
     if (!_CSn) {
