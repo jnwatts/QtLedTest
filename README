@@ -1,44 +1,44 @@
 About
 =====
 
-	This is a little program I threw together to help evaluate different OLED
-	displays and GUI layouts for them. Internally, it's comprised of 1 external
-	widget and 3 of my own:
+    This is a little program I threw together to help evaluate different OLED
+    displays and GUI layouts for them. Internally, it's comprised of 1 external
+    widget and 3 of my own:
 
-	QLedMatrix: I briefly contemplated writing my own widget to emulate the
-	actual LED display, but thanks to a quick search I found one already written
-	for me. Actually, I think the author, Pierre-Etienne Messier, did an amazing
-	job! :-)
+    QLedMatrix: I briefly contemplated writing my own widget to emulate the
+    actual LED display, but thanks to a quick search I found one already written
+    for me. Actually, I think the author, Pierre-Etienne Messier, did an amazing
+    job! :-)
 
-	SSD1306: A simulation of the OLED controller by the same name. This wraps
-	Pierre-Etienne's QLedMatrix with the same interface as the real thing (see
-	lines 46 thru 48). Unlike the real thing, you can resize the display
-	dynamically at run-time. In the future I'd actually extend this model to
-	include various timing and output features of the real controller, such as
-	updating the pixels at the actual "clock-rate" and generating the "frame"
-	signal for synchronizing writes to the device. (Hrm... I suppose I could
-	even simulate the clock-rate of the SPI bus... hehe ;-)
+    SSD1306: A simulation of the OLED controller by the same name. This wraps
+    Pierre-Etienne's QLedMatrix with the same interface as the real thing (see
+    lines 46 thru 48). Unlike the real thing, you can resize the display
+    dynamically at run-time. In the future I'd actually extend this model to
+    include various timing and output features of the real controller, such as
+    updating the pixels at the actual "clock-rate" and generating the "frame"
+    signal for synchronizing writes to the device. (Hrm... I suppose I could
+    even simulate the clock-rate of the SPI bus... hehe ;-)
 
-	Graphics: Not wanting to draw just a single static bitmap to the display, I
-	chose to implement a very basic (and very inefficient) graphics library. The
-	library works directly on the same image format as the SSD1306's internal
-	GDDRAM: each byte of a page corresponds to the 8 bit rows at that particular
-	column. I implement the minimum set of operations I felt I would need to
-	make a useful UI: Fill, Rect, Line, Arc and a convenience "Tab" function.
+    Graphics: Not wanting to draw just a single static bitmap to the display, I
+    chose to implement a very basic (and very inefficient) graphics library. The
+    library works directly on the same image format as the SSD1306's internal
+    GDDRAM: each byte of a page corresponds to the 8 bit rows at that particular
+    column. I implement the minimum set of operations I felt I would need to
+    make a useful UI: Fill, Rect, Line, Arc and a convenience "Tab" function.
 
-	Font_info: Shortly after completing the Tab function, I realized my UI would
-	useless without some kind of font support ;-) I used Font Builder to convert
-	some free fonts into rasterized images. This also generates an XML
-	description file that lists all of the important metrics for each character
-	of the font. I wrote a quick program to convert the png and XML of each font
-	into a C source/header pair (encoded in the same format the graphics lib
-	works on).
+    Font_info: Shortly after completing the Tab function, I realized my UI would
+    useless without some kind of font support ;-) I used Font Builder to convert
+    some free fonts into rasterized images. This also generates an XML
+    description file that lists all of the important metrics for each character
+    of the font. I wrote a quick program to convert the png and XML of each font
+    into a C source/header pair (encoded in the same format the graphics lib
+    works on).
 
 
 Copyright
 =========
 
-	Copyright (C) 2013 Josh Watts <josh@sroz.net> http://www.sroz.net/
+    Copyright (C) 2013 Josh Watts <josh@sroz.net> http://www.sroz.net/
 
 
 License
