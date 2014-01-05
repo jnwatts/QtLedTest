@@ -59,7 +59,7 @@ private:
     void _processDataByte(uint8_t d);
     void _processCommandByte(uint8_t d);
     void _resetCommandState(void);
-    int _getOffset(bool increment);
+    int _getOffset(int ptr_page, int ptr_col, bool increment);
     
     typedef enum {
         CS_IDLE,

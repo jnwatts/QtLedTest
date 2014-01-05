@@ -138,7 +138,7 @@ void SSD1306::_update()
 
 void SSD1306::_processDataByte(uint8_t d)
 {
-    ram[_getOffset(true)] = d;
+    ram[_getOffset(REG_PTR_PAGE, REG_PTR_COL, true)] = d;
 }
 
 void SSD1306::_processCommandByte(uint8_t d)
@@ -242,36 +242,36 @@ void SSD1306::_resetCommandState()
     _command_state = CS_IDLE;
 }
 
-int SSD1306::_getOffset(bool increment)
+int SSD1306::_getOffset(int ptr_page, int ptr_col, bool increment)
 {
-    int offset = reg[REG_PTR_PAGE] * numColumns() + reg[REG_PTR_COL];
+    int offset = reg[ptr_page] * numColumns() + reg[ptr_col];
     
     if (increment) {
         // Increment pointer and check bounds
         switch (reg[REG_MEM_ADDR_MODE]) {
         case REGVAL_MEM_ADDR_MODE_PAGE:
-            reg[REG_PTR_COL]++;
-            if (reg[REG_PTR_COL] > reg[REG_COL_ADDR_STOP]) {
-                reg[REG_PTR_COL] = reg[REG_COL_ADDR_START];
+            reg[ptr_col]++;
+            if (reg[ptr_col] > reg[REG_COL_ADDR_STOP]) {
+                reg[ptr_col] = reg[REG_COL_ADDR_START];
             }
             break;
         case REGVAL_MEM_ADDR_MODE_HORIZ:
-            reg[REG_PTR_COL]++;
-            if (reg[REG_PTR_COL] > reg[REG_COL_ADDR_STOP]) {
-                reg[REG_PTR_COL] = reg[REG_COL_ADDR_START];
-                reg[REG_PTR_PAGE]++;
-                if (reg[REG_PTR_PAGE] > reg[REG_PAGE_ADDR_STOP]) {
-                    reg[REG_PTR_PAGE] = reg[REG_PAGE_ADDR_START];
+            reg[ptr_col]++;
+            if (reg[ptr_col] > reg[REG_COL_ADDR_STOP]) {
+                reg[ptr_col] = reg[REG_COL_ADDR_START];
+                reg[ptr_page]++;
+                if (reg[ptr_page] > reg[REG_PAGE_ADDR_STOP]) {
+                    reg[ptr_page] = reg[REG_PAGE_ADDR_START];
                 }
             }
             break;
         case REGVAL_MEM_ADDR_MDOE_VERT:
-            reg[REG_PTR_PAGE]++;
-            if (reg[REG_PTR_PAGE] > reg[REG_PAGE_ADDR_STOP]) {
-                reg[REG_PTR_PAGE] = reg[REG_PAGE_ADDR_START];
-                reg[REG_PTR_COL]++;
-                if (reg[REG_PTR_COL] > reg[REG_COL_ADDR_STOP]) {
-                    reg[REG_PTR_COL] = reg[REG_COL_ADDR_START];
+            reg[ptr_page]++;
+            if (reg[ptr_page] > reg[REG_PAGE_ADDR_STOP]) {
+                reg[ptr_page] = reg[REG_PAGE_ADDR_START];
+                reg[ptr_col]++;
+                if (reg[ptr_col] > reg[REG_COL_ADDR_STOP]) {
+                    reg[ptr_col] = reg[REG_COL_ADDR_START];
                 }
             }
             break;
