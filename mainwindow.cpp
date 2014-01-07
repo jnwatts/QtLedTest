@@ -41,6 +41,10 @@ MainWindow::MainWindow(QWidget *parent) :
         this->ui->tabFont->addItem(fd->name);
         fd++;
     }
+
+    this->ui->oled->setRSTn(true);
+    this->ui->oled->setRSTn(false);
+    this->ui->oled->setRSTn(true);
 }
 
 MainWindow::~MainWindow()
