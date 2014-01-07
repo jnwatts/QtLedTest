@@ -18,14 +18,16 @@ SOURCES += main.cpp \
     font_data/*.c \
     font_info.cpp \
     ssd1306.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    ssd1306_worker.cpp
 
 HEADERS  += \
     graphics.h \
     font_info.h \
     font_data/*.h \
     ssd1306.h \
-    mainwindow.h
+    mainwindow.h \
+    ssd1306_worker.h
 
 FORMS    += \
     ssd1306.ui \

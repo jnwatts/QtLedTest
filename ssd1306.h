@@ -9,6 +9,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+class SSD1306_Worker;
+
 namespace Ui {
 class SSD1306;
 }
@@ -16,7 +18,8 @@ class SSD1306;
 class SSD1306 : public QWidget
 {
     Q_OBJECT
-    
+    friend class SSD1306_Worker;
+
 public:
     explicit SSD1306(QWidget *parent = 0);
     ~SSD1306();
@@ -43,6 +46,8 @@ public:
     void setPixelOnColor(QRgb color);
     void setPixelOffColor(QRgb color);
     void setDisplayResolution(int columns, int rows);
+    void setRealistic(bool async);
+
     void setRSTn(bool RSTn);
     void setCSn(bool CSn);
     void putByte(bool D_Cn, uint8_t D0_7);
@@ -51,15 +56,29 @@ public:
     
     int numColumns();
     int numPages();
+    int maxOffset();
 
+signals:
+    void FR(bool active);
+    void submitByte(bool D_Cn, uint8_t D0_7);
+
+private slots:
+    void _update_display(int offset);
 
 private:
     void _reset(void);
+    void _setEnabled(bool value);
     void _update(void);
+    void _processByte(bool D_Cn, uint8_t D0_7);
     void _processDataByte(uint8_t d);
     void _processCommandByte(uint8_t d);
     void _resetCommandState(void);
-    int _getOffset(int ptr_page, int ptr_col, bool increment);
+    void _emit_FR(bool active);
+    float _framePeriod(void);
+    float _displayPeriod(void);
+    int _getFosc(void);
+    int _getOffset(int page, int col);
+    bool _increment(int *page, int *col, int mode);
     
     typedef enum {
         CS_IDLE,
@@ -68,8 +87,7 @@ private:
     } CommandState;
     
     typedef enum {
-        REG_PTR_PAGE,
-        REG_PTR_COL,
+        REG_CONTRAST_CONTROL,
         REG_ENTIRE_DISPLAY_ON,
         REG_NORMAL_INVERSE,
         REG_DISPLAY_ON_OFF,
@@ -78,20 +96,30 @@ private:
         REG_COL_ADDR_STOP,
         REG_PAGE_ADDR_START,
         REG_PAGE_ADDR_STOP,
-        REG_PAGE_START_ADDR
+        REG_PAGE_START_ADDR,
+        REG_MULTIPLEX_RATIO,
+        REG_DISPLAY_CLOCK_DIVIDE_RATIO
     } Registers;
     
     Ui::SSD1306 *ui;
     QRgb onColor;
     QRgb offColor;
     
+    bool _realistic;
     bool _CSn;
     bool _RSTn;
+    bool _enabled;
     CommandState _command_state;
     uint8_t _cur_cmd;
     uint8_t _cur_args[2];
+    int mem_ptr_page;
+    int mem_ptr_col;
+    int disp_ptr_page;
+    int disp_ptr_col;
     QMap<uint8_t, int> reg;
     QVector<uint8_t> ram;
+
+    SSD1306_Worker *_work;
 };
 
 #endif // SSD1306_H
