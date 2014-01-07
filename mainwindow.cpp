@@ -42,6 +42,9 @@ MainWindow::MainWindow(QWidget *parent) :
         fd++;
     }
 
+    connect(this->ui->renderDirect, SIGNAL(toggled(bool)), this, SLOT(renderMode(bool)));
+    connect(this->ui->renderRealistic, SIGNAL(toggled(bool)), this, SLOT(renderMode(bool)));
+
     this->ui->oled->setRSTn(true);
     this->ui->oled->setRSTn(false);
     this->ui->oled->setRSTn(true);
@@ -164,4 +167,11 @@ void MainWindow::on_monRes_textChanged(const QString &arg1)
         return;
     QSizeF dpi(res.width() / dim.width(), res.height() / dim.height());
     this->ui->monitorDPI->setText(QString::number(dpi.width()) + "x" + QString::number(dpi.height()));
+}
+
+void MainWindow::renderMode(bool value)
+{
+    if (QObject::sender() == (QObject*)this->ui->renderRealistic) {
+        this->ui->oled->setRealistic(value);
+    }
 }

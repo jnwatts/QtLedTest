@@ -19,15 +19,18 @@ public:
     ~MainWindow();
     
 public slots:
-    void on_tabFont_currentIndexChanged(int index);
     
 private slots:
     void on_pbUpdate_clicked();
     void resize(void);
 
+    void on_tabFont_currentIndexChanged(int index);
+
     void on_monDim_textChanged(const QString &arg1);
 
     void on_monRes_textChanged(const QString &arg1);
+
+    void renderMode(bool);
 
 private:
     void render(void);
