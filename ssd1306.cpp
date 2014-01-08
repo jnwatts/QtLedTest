@@ -194,28 +194,32 @@ void SSD1306::_update()
     }
 }
 
-void SSD1306::_processByte(bool D_Cn, uint8_t D0_7)
+bool SSD1306::_processByte(bool D_Cn, uint8_t D0_7)
 {
+    bool ret = false;
     if (!_CSn) {
         if (D_Cn) {
-            _processDataByte(D0_7);
+            ret = _processDataByte(D0_7);
         } else {
-            _processCommandByte(D0_7);
+            ret = _processCommandByte(D0_7);
         }
     }
+    return ret;
 }
 
-void SSD1306::_processDataByte(uint8_t d)
+bool SSD1306::_processDataByte(uint8_t d)
 {
     int offset = _getOffset(mem_ptr_page, mem_ptr_col);
     ram[offset] = d;
     _increment(&mem_ptr_page, &mem_ptr_col, reg[REG_MEM_ADDR_MODE]);
     if (!_realistic)
         _update_display(offset);
+    return true;
 }
 
-void SSD1306::_processCommandByte(uint8_t d)
+bool SSD1306::_processCommandByte(uint8_t d)
 {
+    bool handled = false;
     switch (_command_state) {
     case CS_IDLE:
         if ((d & 0xF0) == 0x20) {
@@ -227,7 +231,7 @@ void SSD1306::_processCommandByte(uint8_t d)
                 _cur_cmd = d;
             }
         } else {
-            bool handled = true;
+            handled = true;
             switch (d & 0xFE) {
             case CMD_SET_ENTIRE_DISPLAY_ON:
                 reg[REG_ENTIRE_DISPLAY_ON] = d & 0x01;
@@ -271,12 +275,11 @@ void SSD1306::_processCommandByte(uint8_t d)
                 handled = false;
                 break;
             }
-            if (handled)
-                break;
         }
         break;
     case CS_ONE_ARG:
         _cur_args[0] = d;
+        handled = true;
         switch (_cur_cmd) {
         case CMD_SET_MEM_ADDR_MODE:
             // A is index 0
@@ -298,6 +301,9 @@ void SSD1306::_processCommandByte(uint8_t d)
             // Reset PTR_PAGE
             mem_ptr_page = reg[REG_PAGE_ADDR_START];
             break;
+        default:
+            handled = false;
+            break;
         }
         _command_state = CS_IDLE;
         break;
@@ -308,6 +314,7 @@ void SSD1306::_processCommandByte(uint8_t d)
     default:
         break;
     }
+    return handled;
 }
 
 void SSD1306::_resetCommandState()

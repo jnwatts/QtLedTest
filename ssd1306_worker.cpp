@@ -3,7 +3,9 @@
 
 SSD1306_Worker::SSD1306_Worker(QObject *parent) :
     QThread(parent),
-    running(false)
+    running(false),
+    enabled(false),
+    dirty(true)
 {
     ssd1306 = (SSD1306*)parent;
 }
@@ -12,6 +14,7 @@ SSD1306_Worker::~SSD1306_Worker(void)
 {
     if (running && isRunning()) {
         running = false;
+        sem.release(1);
         this->wait();
     }
 }
@@ -19,6 +22,7 @@ SSD1306_Worker::~SSD1306_Worker(void)
 void SSD1306_Worker::run(void) {
     if (!ssd1306)
         return;
+
     running = true;
 
     enum {
@@ -29,7 +33,7 @@ void SSD1306_Worker::run(void) {
     } state = STATE_DISABLED;
 
     while (running) {
-        unsigned long delay = 100 * 1000;
+        unsigned long delay = 0;
         switch (state) {
         case STATE_DISABLED:
             if (enabled)
@@ -38,7 +42,7 @@ void SSD1306_Worker::run(void) {
         case STATE_IDLE:
             if (!enabled) {
                 state = STATE_DISABLED;
-            } else {
+            } else if (dirty) {
                 state = STATE_SYNC;
                 ssd1306->_emit_FR(true);
                 delay = 1000.0 * 1000.0 * ssd1306->_framePeriod() / ssd1306->numPages();
@@ -51,8 +55,10 @@ void SSD1306_Worker::run(void) {
         case STATE_RENDER:
         {
             int offset = ssd1306->_getOffset(ssd1306->disp_ptr_page, ssd1306->disp_ptr_col);
-            if (ssd1306->_increment(&ssd1306->disp_ptr_page, &ssd1306->disp_ptr_col, SSD1306::REGVAL_MEM_ADDR_MODE_HORIZ))
+            if (ssd1306->_increment(&ssd1306->disp_ptr_page, &ssd1306->disp_ptr_col, SSD1306::REGVAL_MEM_ADDR_MODE_HORIZ)) {
+                dirty = false;
                 state = STATE_IDLE;
+            }
             delay = 1000.0 * 1000.0 * ssd1306->_displayPeriod();
             emit update_display(offset);
         }
@@ -60,7 +66,11 @@ void SSD1306_Worker::run(void) {
         default:
             state = STATE_DISABLED;
         }
-        usleep(delay);
+        if (delay > 0) {
+            usleep(delay);
+        } else {
+            sem.tryAcquire(1, 1000);
+        }
     }
 }
 
@@ -71,5 +81,8 @@ void SSD1306_Worker::setEnabled(bool value)
 
 void SSD1306_Worker::receiveByte(bool D_Cn, uint8_t D0_7)
 {
-    ssd1306->_processByte(D_Cn, D0_7);
+    if (ssd1306->_processByte(D_Cn, D0_7)) {
+        sem.release(1);
+        dirty = true;
+    }
 }

@@ -70,9 +70,9 @@ private:
     void _reset(void);
     void _setEnabled(bool value);
     void _update(void);
-    void _processByte(bool D_Cn, uint8_t D0_7);
-    void _processDataByte(uint8_t d);
-    void _processCommandByte(uint8_t d);
+    bool _processByte(bool D_Cn, uint8_t D0_7);
+    bool _processDataByte(uint8_t d);
+    bool _processCommandByte(uint8_t d);
     void _resetCommandState(void);
     void _emit_FR(bool active);
     float _framePeriod(void);

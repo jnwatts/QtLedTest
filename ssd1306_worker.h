@@ -2,6 +2,7 @@
 #define SSD1306_WORKER_H
 
 #include <QThread>
+#include <QSemaphore>
 #include <stdint.h>
 
 class SSD1306;
@@ -24,6 +25,8 @@ signals:
 private:
     bool running;
     bool enabled;
+    bool dirty;
+    QSemaphore sem;
     SSD1306 *ssd1306;
 };
 
