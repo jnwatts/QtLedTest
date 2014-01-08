@@ -31,6 +31,7 @@ private slots:
     void on_monRes_textChanged(const QString &arg1);
 
     void renderMode(bool);
+    void FR(bool active);
 
 private:
     void render(void);

@@ -44,6 +44,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(this->ui->renderDirect, SIGNAL(toggled(bool)), this, SLOT(renderMode(bool)));
     connect(this->ui->renderRealistic, SIGNAL(toggled(bool)), this, SLOT(renderMode(bool)));
+    connect(this->ui->oled, SIGNAL(FR(bool)), this, SLOT(FR(bool)));
 
     this->ui->oled->setRSTn(true);
     this->ui->oled->setRSTn(false);
@@ -128,7 +129,8 @@ void MainWindow::on_pbUpdate_clicked()
     if (!gpu_mem)
         resize();
     render();
-    update();
+    if (!this->ui->oled->realistic())
+        update();
 }
 
 void MainWindow::resize()
@@ -173,5 +175,14 @@ void MainWindow::renderMode(bool value)
 {
     if (QObject::sender() == (QObject*)this->ui->renderRealistic) {
         this->ui->oled->setRealistic(value);
+    }
+}
+
+void MainWindow::FR(bool active)
+{
+    if (this->ui->oled->realistic()) {
+        if (active) { // Rising edge, start rendering
+            update();
+        }
     }
 }
