@@ -47,6 +47,7 @@ public:
     void setPixelOffColor(QRgb color);
     void setDisplayResolution(int columns, int rows);
     void setRealistic(bool async);
+    bool realistic(void);
 
     void setRSTn(bool RSTn);
     void setCSn(bool CSn);

@@ -78,6 +78,11 @@ void SSD1306::setRealistic(bool realistic)
     _work->setEnabled(realistic);
 }
 
+bool SSD1306::realistic(void)
+{
+    return _realistic;
+}
+
 void SSD1306::setRSTn(bool RSTn)
 {
     if (_RSTn && !RSTn) {
